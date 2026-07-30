@@ -73,7 +73,7 @@ end
 local Voxel = V.require("VoxelState")
 local Voxel3D = V.require("Voxel3D")
 local VoxelScene = V.require("VoxelScene")
-local TiltShift = V.require("TiltShift")
+--local TiltShift = V.require("TiltShift")
 local ChunkMesher = V.require("ChunkMesher")
 local VoxelGrid = V.require("VoxelGrid")
 local WorldCurve = V.require("WorldCurve")
@@ -219,29 +219,29 @@ mod.content.render_pipelines:register("voxel", {
   end,
 })
 
-mod.content.render_pipelines:register("tiltshift", {
-  label = "T-SHIFT",
-  levels = TiltShift.LABELS,
-  -- 6 is free: no engine branch claims it, so this one alone reaches the
-  -- registry by the documented route
-  hotkey = "6",
-  priority = 10,
-
-  update = function(dt, level)
-    TiltShift.update(dt, level)
-  end,
-
-  -- worldPresent, not present: the blur belongs on the diorama, not on the
-  -- dialog box in front of it.  A pass-through when the level is 0 or the
-  -- shader is unavailable, so the frame is untouched in every other case.
-  worldPresent = function(canvas)
-    return TiltShift.apply(canvas)
-  end,
-
-  invalidate = function()
-    TiltShift.invalidate()
-  end,
-})
+--mod.content.render_pipelines:register("tiltshift", {
+--  label = "T-SHIFT",
+--  levels = TiltShift.LABELS,
+--  -- 6 is free: no engine branch claims it, so this one alone reaches the
+--  -- registry by the documented route
+--  hotkey = "6",
+--  priority = 10,
+--
+--  update = function(dt, level)
+--    TiltShift.update(dt, level)
+--  end,
+--
+--  -- worldPresent, not present: the blur belongs on the diorama, not on the
+--  -- dialog box in front of it.  A pass-through when the level is 0 or the
+--  -- shader is unavailable, so the frame is untouched in every other case.
+--  worldPresent = function(canvas)
+--    return TiltShift.apply(canvas)
+--  end,
+--
+--  invalidate = function()
+--    TiltShift.invalidate()
+--  end,
+--})
 
 -- ------- this mod's own settings
 --
@@ -276,7 +276,7 @@ applyFull = function(level)
 
   -- the miniature blur at its strongest: FULL is the diorama look, and the
   -- tilt-shift is most of what makes it read as a model
-  Pipelines.setLevel("tiltshift", Pipelines.maxLevel("tiltshift"))
+  -- Pipelines.setLevel("tiltshift", Pipelines.maxLevel("tiltshift"))
   Pipelines.syncOptions(opts)
   -- the horizon flat. The curve bends the world away from a walking player,
   -- which fights a fixed diorama framing
@@ -492,12 +492,12 @@ mod.hooks:wrap("ui.options.rows", function(next, game, rows)
     OverworldBattle.forceOG(game)
     dropRow(out, "battleLayout")
   end
-  if Voxel.isFull(Pipelines.level("voxel")) then
-    -- FULL keeps every mod row off the menu (the early return skips the
-    -- insert below), and holds DAYTIME at SYNC while the row is unreachable
-    DayNight.forceSync(game)
-    return dropRow(out, "pipeline:tiltshift")
-  end
+  --if Voxel.isFull(Pipelines.level("voxel")) then
+  --  -- FULL keeps every mod row off the menu (the early return skips the
+  --  -- insert below), and holds DAYTIME at SYNC while the row is unreachable
+  --  DayNight.forceSync(game)
+  --  return dropRow(out, "pipeline:tiltshift")
+  --end
   local extra = {}
   for _, entry in ipairs(SETTINGS) do extra[#extra + 1] = entry[1]:row() end
   return insertGrouped(out, extra)
